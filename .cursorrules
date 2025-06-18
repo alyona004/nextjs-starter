@@ -69,27 +69,59 @@ Avoid:
 ---
 
 Development Workflow:
-Use the local `.mdc` files in the project root to manage all feature work through structured steps. Cursor should follow these conventions automatically:
+Use the `.cursor/` folder to manage all feature work through structured steps using `.mdc` files. Cursor should follow these conventions automatically:
 
 1. When a user says “Let’s build a feature” or “Let’s define a new feature”:
-   - Invoke `@create-prd.mdc`
+   - Invoke `@.cursor/create-prd.mdc`
    - Prompt for a detailed feature description (accept natural language input)
    - Optionally reference source files if mentioned (e.g., @file.ts)
-   - Output a complete PRD in markdown format (e.g., @MyFeature-PRD.md)
+   - Output a complete PRD in markdown format (e.g., `FormName-PRD.md`)
+   - **Save all generated PRDs in the `/tasks` directory (not `.cursor`)**
    - **Do not proceed to task generation or implementation**
    - **Wait for explicit user confirmation (e.g., “Looks good”, “Generate tasks”) before continuing**
 
 2. When the user approves the PRD:
-   - Use `@generate-tasks.mdc` to break the PRD into clear, actionable development tasks
+   - Use `@.cursor/generate-tasks.mdc` to break the PRD into clear, actionable development tasks
    - Group tasks with numbered headings (e.g., 1.1, 1.2, 2.1)
+   - **Save the task list in `/tasks`, using the same prefix as the PRD (e.g., `FormName-Tasks.md`)**
 
 3. When the user says “Let’s start task [X]” or “Start implementing”:
-   - Use `@process-task-list.mdc` to begin the selected task
+   - Use `@.cursor/process-task-list.mdc` to begin the selected task
    - Implement only what’s required for that task
    - Output code changes or proposed file edits for review
 
 This workflow should always be followed unless explicitly instructed otherwise.
 
 Reminders:
-- Start every scoped feature with `@create-prd.mdc`.
+- Start every scoped feature with `@.cursor/create-prd.mdc`.
 - Only begin coding once the PRD and task list are generated and approved.
+- Always save generated documentation (PRDs and tasks) to the `/tasks` folder.
+
+---
+
+Project Initialization Workflow:
+When initializing a new Next.js project, do not scaffold directly into the current directory if it contains files (e.g., `.cursor/`, `/tasks`, `.cursorrules`, etc.).
+
+Instead, follow this safe setup process:
+
+1. Create the Next.js project in a temporary subfolder (e.g., `temp-next-app`)
+   - Example:
+     ```bash
+     npx create-next-app@latest temp-next-app --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --yes
+     ```
+
+2. After scaffolding, move all contents from `temp-next-app/` into the current working directory:
+   - Example:
+     ```bash
+     cp -R temp-next-app/* ./ && cp -R temp-next-app/.* ./ 2>/dev/null
+     ```
+
+3. Delete the temporary folder:
+   - Example:
+     ```bash
+     rm -rf temp-next-app
+     ```
+
+4. Do **not** overwrite existing files like `.cursorrules`, `.cursor/`, or `/tasks`. Preserve them during the copy process.
+
+Cursor should apply this process automatically when a user asks to "create a new project" or initialize a new Next.js app in a non-empty folder.
