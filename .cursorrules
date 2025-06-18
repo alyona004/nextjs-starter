@@ -76,8 +76,10 @@ Use the local `.mdc` files in the project root to manage all feature work throug
    - Prompt for a detailed feature description (accept natural language input)
    - Optionally reference source files if mentioned (e.g., @file.ts)
    - Output a complete PRD in markdown format (e.g., @MyFeature-PRD.md)
+   - **Do not proceed to task generation or implementation**
+   - **Wait for explicit user confirmation (e.g., “Looks good”, “Generate tasks”) before continuing**
 
-2. When the PRD is ready:
+2. When the user approves the PRD:
    - Use `@generate-tasks.mdc` to break the PRD into clear, actionable development tasks
    - Group tasks with numbered headings (e.g., 1.1, 1.2, 2.1)
 
